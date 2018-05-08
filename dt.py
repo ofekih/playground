@@ -10,9 +10,18 @@ def get_hash(board: [int]) -> int:
 	return h
 
 def get_result(results: [(int, int)], h: int):
-	for result in results:
-		if result[0] == h:
-			return result[1]
+	first = 0
+	last = len(results)
+	while first <= last:
+		mid = (first + last) // 2
+
+		if results[mid][0] == h:
+			return results[mid][1]
+		elif h < results[mid][0]:
+			last = mid - 1
+		else:
+			first = mid + 1
+	print("Cannot find result")
 
 def get_children(board: [int]) -> [[int]]:
 	possible_moves = [i + 1 for i in range(len(board))]
@@ -62,6 +71,7 @@ def board_result(board: [int]) -> int:
 
 def play_game(ai_turn: str, size: int, results: [(int, int)]):
 	board = [0] * (size ** 2)
+	moves = []
 	turn = True
 	while 0 in board:
 		print_board(board, size, get_result(results, get_hash(board)))
@@ -74,10 +84,15 @@ def play_game(ai_turn: str, size: int, results: [(int, int)]):
 				move = get_best_move(board, 1 if turn else -1, results)
 			elif move == "random":
 				move = get_random_move(board)
+			elif move == "undo":
+				board[moves.pop()] = 0
+				turn = not turn
+				continue
 			elif move == 'exit':
 				return
 
 		board[move[0]] = move[1]
+		moves.append(move[0])
 
 		turn = not turn
 
@@ -92,6 +107,7 @@ def get_results(filename: str) -> [(int, int)]:
 	with open(filename) as file:
 		for line in file:
 			results.append(tuple((int(i) for i in line.split())))
+	results.sort()
 	return results
 
 if __name__ == '__main__':
