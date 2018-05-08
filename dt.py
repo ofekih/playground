@@ -1,5 +1,7 @@
 import random
 
+SIZE = 3
+
 def get_hash(board: [int]) -> int:
 	# print(board)
 	h = 0
@@ -98,7 +100,7 @@ if __name__ == '__main__':
 	print("loaded")
 
 	while 1:
-		play_game(input("AI Turn: "), 3, results)
+		play_game(input("AI Turn: "), SIZE, results)
 
 
 	# print(results)
