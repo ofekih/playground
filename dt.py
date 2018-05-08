@@ -38,6 +38,8 @@ def get_children(board: [int]) -> [[int]]:
 				tmp[n] = m
 				children.append((tmp, (n, m)))
 
+	possible_moves.shuffle(children)
+
 	return children
 
 def get_best_move(board: [int], target_sign: int, results: [(int, int)]) -> (int, int):
@@ -70,26 +72,30 @@ def board_result(board: [int]) -> int:
 	return board[0] * (board[4] * board[8] - board[5] * board[7]) - board[1] * (board[3] * board[8] - board[5] * board[6]) + board[2] * (board[3] * board[7] - board[4] * board[6]);
 
 def play_game(ai_turn: str, size: int, results: [(int, int)]):
+	if ai_turn[0] == 'exit'[0]:
+		exit(0)
 	board = [0] * (size ** 2)
 	moves = []
 	turn = True
 	while 0 in board:
 		print_board(board, size, get_result(results, get_hash(board)))
 		move = None
-		if ai_turn == 'both' or turn == (ai_turn == 'first') and not ai_turn == 'none':
+		if ai_turn[0] == 'both'[0] or turn == (ai_turn[0] == 'first'[0]) and not ai_turn[0] == 'none'[0]:
 			move = get_best_move(board, 1 if turn else -1, results)
 		else:
 			move = get_human_move(size)
-			if move == "ai":
+			if move[0] == "ai"[0]:
 				move = get_best_move(board, 1 if turn else -1, results)
-			elif move == "random":
+			elif move[0] == "random"[0]:
 				move = get_random_move(board)
-			elif move == "undo":
+			elif move[0] == "undo"[0]:
 				board[moves.pop()] = 0
 				turn = not turn
 				continue
-			elif move == 'exit':
+			elif move[0] == "exit"[0]:
 				return
+			elif type(move[0]) == str:
+				continue
 
 		board[move[0]] = move[1]
 		moves.append(move[0])
