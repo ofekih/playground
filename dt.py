@@ -38,26 +38,47 @@ def get_children(board: [int]) -> [[int]]:
 				tmp[n] = m
 				children.append((tmp, (n, m)))
 
-	random.shuffle(children)
-
 	return children
 
-def get_best_move(board: [int], target_sign: int, results: [(int, int)]) -> (int, int):
+def get_best_move(board: [int], results: [(int, int)]) -> (int, int):
 	result = get_result(results, get_hash(board))
 	children = get_children(board)
+	random.shuffle(children)
 
 	for (child, move) in children:
 		if get_result(results, get_hash(child)) == result:
 			return move
 
-def get_good_move(board: [int], target_sign: int, results: [(int, int)]) -> (int, int):
+def get_good_move(board: [int], results: [(int, int)]) -> (int, int):
 	result = get_result(results, get_hash(board))
 	children = get_children(board)
+	random.shuffle(children)
 
 	for (child, move) in children:
 		tresult = get_result(results, get_hash(child))
 		if tresult == result or tresult * result > 0:
 			return move
+
+def get_possible_squares(board: [int], size: int, results: [(int, int)]):
+	result = get_result(results, get_hash(board))
+	children = get_children(board)
+
+	squares = []
+
+	for (child, move) in children:
+		if move[0] in squares: continue
+		tresult = get_result(results, get_hash(child))
+		if tresult == result or tresult * result > 0:
+			squares.append(move[0])
+
+	return [tuple([i // size, i % size]) for i in squares]
+
+def print_squares(board: [int], size: int, squares: [(int, int)]):
+	for r in range(size):
+		for c in range(size):
+			print(board[r * size + c] if (r, c) not in squares else '*', end=" ")
+		print()
+	print()
 
 def get_random_move(board: [int]) -> (int, int):
 	return random.choice(get_children(board))[1]
@@ -93,21 +114,31 @@ def play_game(ai_turn: str, size: int, results: [(int, int)]):
 			move = get_best_move(board, 1 if turn else -1, results)
 		else:
 			move = get_human_move(size)
+			if type(move) == str and len(move) == 0:
+				continue
 			if move[0] == "ai"[0]:
-				move = get_best_move(board, 1 if turn else -1, results)
+				move = get_best_move(board, results)
 			elif move[0] == "good"[0]:
-				move = get_good_move(board, 1 if turn else -1, results)
+				move = get_good_move(board, results)
 			elif move[0] == "random"[0]:
 				move = get_random_move(board)
 			elif move[0] == "undo"[0]:
+				if len(moves) == 0: continue
 				board[moves.pop()] = 0
 				turn = not turn
 				ai_turn = 'none'
 				continue
 			elif move[0] == "exit"[0]:
 				return
-			elif type(move[0]) == str:
+			elif move[0] == "squares"[0]:
+				print_squares(board, size, get_possible_squares(board, size, results))
 				continue
+			elif type(move) == str:
+				continue
+
+		if move == None:
+			print("ERR: NONETYPE")
+			continue
 
 		board[move[0]] = move[1]
 		moves.append(move[0])
