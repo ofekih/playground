@@ -50,6 +50,15 @@ def get_best_move(board: [int], target_sign: int, results: [(int, int)]) -> (int
 		if get_result(results, get_hash(child)) == result:
 			return move
 
+def get_good_move(board: [int], target_sign: int, results: [(int, int)]) -> (int, int):
+	result = get_result(results, get_hash(board))
+	children = get_children(board)
+
+	for (child, move) in children:
+		tresult = get_result(results, get_hash(child))
+		if tresult == result or tresult * result > 0:
+			return move
+
 def get_random_move(board: [int]) -> (int, int):
 	return random.choice(get_children(board))[1]
 
@@ -86,6 +95,8 @@ def play_game(ai_turn: str, size: int, results: [(int, int)]):
 			move = get_human_move(size)
 			if move[0] == "ai"[0]:
 				move = get_best_move(board, 1 if turn else -1, results)
+			elif move[0] == "good"[0]:
+				move = get_good_move(board, 1 if turn else -1, results)
 			elif move[0] == "random"[0]:
 				move = get_random_move(board)
 			elif move[0] == "undo"[0]:
