@@ -46,6 +46,9 @@ def print_board(board: [int], size: int):
 		print()
 	print()
 
+def board_result(board: [int]) -> int:
+	return board[0] * (board[4] * board[8] - board[5] * board[7]) - board[1] * (board[3] * board[8] - board[5] * board[6]) + board[2] * (board[3] * board[7] - board[4] * board[6]);
+
 def play_game(ai_turn: str, size: int, results: [(int, int)]):
 	board = [0] * (size ** 2)
 	turn = True
@@ -63,7 +66,8 @@ def play_game(ai_turn: str, size: int, results: [(int, int)]):
 
 	print_board(board, size)
 
-	# print("First player wins" if board.result() > 0 else ("Tie game" if board.result() == 0 else "Second player wins"))
+	print("First player wins" if board_result(board) > 0 else ("Tie game" if board_result(board) == 0 else "Second player wins"))
+	print("Board Result:", board_result(board))
 
 
 def get_results(filename: str) -> [(int, int)]:
@@ -77,5 +81,9 @@ if __name__ == '__main__':
 	print("Loading results... ", end="")
 	results = get_results("3x3.txt")
 	print("loaded")
-	play_game('both', 3, results)
+
+	while 1:
+		play_game(input("AI Turn: "), 3, results)
+
+
 	# print(results)

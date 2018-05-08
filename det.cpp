@@ -85,7 +85,7 @@ int DetBoard::solveBoard(DetBoard &d, int target_sign, ofstream & ofile)
 	{
 		int result = d.result();
 		visitedmap[d.hash] = true;
-		hashmap[d.hash] = result;
+		hashmap[d.hash] = result > 127 ? 127 : result < -127 ? -127 : result;
 		save(d.hash, result, ofile);
 		return result;
 	}
@@ -108,14 +108,28 @@ int DetBoard::solveBoard(DetBoard &d, int target_sign, ofstream & ofile)
 
 					if (result * target_sign > best_result * target_sign || best_result == -9999)
 						best_result = result;
-
 					// cout << result << "HEYA" << endl;
 
 					d.undoMove(n, m);
+					if (d.hash == 817392046)
+					{
+						for (int i : d.board)
+							cout << i << " ";
+						cout << endl;
+						for (bool i : d.moves)
+							cout << i << " ";
+						cout << endl;
+						cout << n << " " << m << endl;
+						cout << result << " " << target_sign << " " << best_result << endl;
+
+						d.playMove(n, m);
+						cout << hashmap[d.hash] << " " << d.hash << endl;
+						d.undoMove(n, m);
+					}
 				}
 
 	visitedmap[d.hash] = true;
-	hashmap[d.hash] = best_result;
+	hashmap[d.hash] = best_result > 127 ? 127 : best_result < -127 ? -127 : best_result;
 	save(d.hash, best_result, ofile);
 	return best_result;
 }
