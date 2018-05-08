@@ -38,7 +38,7 @@ def get_children(board: [int]) -> [[int]]:
 				tmp[n] = m
 				children.append((tmp, (n, m)))
 
-	possible_moves.shuffle(children)
+	random.shuffle(children)
 
 	return children
 
@@ -91,6 +91,7 @@ def play_game(ai_turn: str, size: int, results: [(int, int)]):
 			elif move[0] == "undo"[0]:
 				board[moves.pop()] = 0
 				turn = not turn
+				ai_turn = 'none'
 				continue
 			elif move[0] == "exit"[0]:
 				return
