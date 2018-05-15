@@ -58,3 +58,26 @@ if __name__ == '__main__':
 			print("Wrong ;(")
 			dt.print_board(board, dt.SIZE, result)
 
+
+	while 1:
+		board = get_random_board(dt.SIZE)
+		board = erode_board(board)
+		dt.print_board(board, dt.SIZE, '?')
+		move = dt.get_human_move(dt.SIZE)
+
+		board[move[0]] = move[1]
+
+		if sign == 'next':
+			break
+
+		result = dt.get_result(results, dt.get_hash(board))
+
+		if sign == '-' and result < 0 or \
+		   sign == '0' and result == 0 or \
+		   not sign in ('-', '0') and result > 0:
+
+		   print("Correct:", result)
+
+		else:
+			print("Wrong ;(")
+			dt.print_board(board, dt.SIZE, result)

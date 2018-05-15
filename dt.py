@@ -49,6 +49,15 @@ def get_best_move(board: [int], results: [(int, int)]) -> (int, int):
 		if get_result(results, get_hash(child)) == result:
 			return move
 
+# def is_good_move(board: [int], move: (int, int), results: [(int, int)]) -> bool:
+# 	result = get_result(results, get_hash(board))
+# 	children = get_children(board)
+
+# 	for (child, m) in children:
+# 		if m != move: continue
+# 		tresult = get_result(results, get_hash(child))
+		# return tresult == result or tresult * result > 0:
+
 def get_good_move(board: [int], results: [(int, int)]) -> (int, int):
 	result = get_result(results, get_hash(board))
 	children = get_children(board)
@@ -111,7 +120,7 @@ def play_game(ai_turn: str, size: int, results: [(int, int)]):
 		print_board(board, size, get_result(results, get_hash(board)))
 		move = None
 		if ai_turn[0] == 'both'[0] or turn == (ai_turn[0] == 'first'[0]) and not ai_turn[0] == 'none'[0]:
-			move = get_best_move(board, 1 if turn else -1, results)
+			move = get_best_move(board, results)
 		else:
 			move = get_human_move(size)
 			if type(move) == str and len(move) == 0:

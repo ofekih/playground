@@ -90,8 +90,6 @@ int DetBoard::solveBoard(DetBoard &d, int target_sign, ofstream & ofile)
 		return result;
 	}
 
-	// cout << "Moves Left: " << d.movesleft << endl;
-
 	int best_result = -9999;
 
 	for (int n = 0; n < SIZE2; ++n)
@@ -108,7 +106,6 @@ int DetBoard::solveBoard(DetBoard &d, int target_sign, ofstream & ofile)
 
 					if (result * target_sign > best_result * target_sign || best_result == -9999)
 						best_result = result;
-					// cout << result << "HEYA" << endl;
 
 					d.undoMove(n, m);
 					if (d.hash == 817392046)
